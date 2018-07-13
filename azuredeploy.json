@@ -31,6 +31,15 @@
       },
       "subnetPrefix2": {
         "type": "string"
+      },
+      "vmsize": {
+        "type": "string"
+      },
+      "imagesku": {
+        "type": "string"
+      },
+      "keyVaultID": {
+        "type": "string"
       }
     },
     "variables": {
@@ -40,12 +49,70 @@
         "vpnconnectionURL": "[concat(parameters('templatesBaseUrl'),'/nested/VPNConnection.json')]",
         "vneturl": "[concat(parameters('templatesBaseUrl'),'/nested/VirtualNetwork.json')]",
         "lburl": "[concat(parameters('templatesBaseUrl'),'/nested/loadbalancer.json')]",
-        "pipurl": "[concat(parameters('templatesBaseUrl'),'/nested/publicip.json')]"
+        "pipurl": "[concat(parameters('templatesBaseUrl'),'/nested/publicip.json')]",
+        "vmlburl": "[concat(parameters('templatesBaseUrl'),'/nested/virtualmachinelb1disk.json')]"
   
       }
   
     },
     "resources": [
+        {
+            "name": "SMBCWAP",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2017-05-10",
+            "dependsOn": [
+              "Microsoft.Resources/deployments/VirtualNetwork",
+              "Microsoft.Resources/deployments/WAPLB"
+            ],
+            "properties": {
+              "mode": "Incremental",
+              "templateLink": {
+                "uri": "[variables('Configuration').vmlburl]",
+                "contentVersion": "1.0.0.0"
+              },
+              "parameters": {
+                "vmName": {
+                  "value": "[parameters('wapname')]"
+                },
+                "vnetid": {
+                  "value": "[reference('VirtualNetwork').outputs.VNetID.value]"
+                },
+                "lbid": {
+                    "value": "[reference('WAPLB').outputs.lbID.value]"
+                  },
+                "subnetname": {
+                  "value": "[parameters('subnet2name')]"
+                },
+                "vmsize": {
+                  "value": "[parameters('vmsize')]"
+                },
+                "adminUsername": {
+                  "reference": {
+                    "keyVault": {
+                      "id": "[parameters('keyVaultID')]"
+                    },
+                    "secretname": "adminusername"
+                  }
+      
+                },
+                "adminPassword": {
+                  "reference": {
+                    "keyVault": {
+                      "id": "[parameters('keyVaultID')]"
+                    },
+                    "secretname": "adminpassword"
+                  }
+      
+                },
+                "location": {
+                  "value": "[parameters('location')]"
+                },
+                "imageSku": {
+                  "value": "[parameters('imageSku')]"
+                }
+              }
+            }
+          },
         {
             "name": "Subnet1NSG",
             "type": "Microsoft.Resources/deployments",

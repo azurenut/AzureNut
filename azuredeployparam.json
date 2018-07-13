@@ -28,6 +28,15 @@
       },
       "subnetPrefix2": {
         "value": "10.250.254.0/24"
+      },
+      "vmsize": {
+        "value": "standard_d1_v2"
+      },
+      "imagesku": {
+        "value": "2016-Datacenter"
+      },
+      "keyVaultID": {
+        "value": "/subscriptions/f9060c6d-5198-4e2b-8e91-9f3b34c74305/resourceGroups/V1-SMBCIdentity/providers/Microsoft.KeyVault/vaults/smbckv"
       }
     }
   }
