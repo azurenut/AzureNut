@@ -50,12 +50,225 @@
         "vneturl": "[concat(parameters('templatesBaseUrl'),'/nested/VirtualNetwork.json')]",
         "lburl": "[concat(parameters('templatesBaseUrl'),'/nested/loadbalancer.json')]",
         "pipurl": "[concat(parameters('templatesBaseUrl'),'/nested/publicip.json')]",
-        "vmlburl": "[concat(parameters('templatesBaseUrl'),'/nested/virtualmachinelb1disk.json')]"
+        "vmlburl": "[concat(parameters('templatesBaseUrl'),'/nested/virtualmachinelb1disk.json')]",
+        "vmurl": "[concat(parameters('templatesBaseUrl'),'/nested/virtualmachine1disk.json')]"
   
       }
   
     },
     "resources": [
+        {
+            "name": "SMBCAADC",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2017-05-10",
+            "dependsOn": [
+              "Microsoft.Resources/deployments/VirtualNetwork"
+            ],
+            "properties": {
+              "mode": "Incremental",
+              "templateLink": {
+                "uri": "[variables('Configuration').vmlburl]",
+                "contentVersion": "1.0.0.0"
+              },
+              "parameters": {
+                "vmName": {
+                  "value": "smbcaad01"
+                },
+                "vnetid": {
+                  "value": "[reference('VirtualNetwork').outputs.VNetID.value]"
+                },
+                "subnetname": {
+                  "value": "[parameters('subnet1name')]"
+                },
+                "vmsize": {
+                  "value": "[parameters('vmsize')]"
+                },
+                "adminUsername": {
+                  "reference": {
+                    "keyVault": {
+                      "id": "[parameters('keyVaultID')]"
+                    },
+                    "secretname": "adminusername"
+                  }
+      
+                },
+                "adminPassword": {
+                  "reference": {
+                    "keyVault": {
+                      "id": "[parameters('keyVaultID')]"
+                    },
+                    "secretname": "adminpassword"
+                  }
+      
+                },
+                "location": {
+                  "value": "[parameters('location')]"
+                },
+                "imageSku": {
+                  "value": "[parameters('imageSku')]"
+                }
+              }
+            }
+        },
+        {
+            "name": "SMBCADFS",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2017-05-10",
+            "dependsOn": [
+              "Microsoft.Resources/deployments/VirtualNetwork"
+            ],
+            "properties": {
+              "mode": "Incremental",
+              "templateLink": {
+                "uri": "[variables('Configuration').vmlburl]",
+                "contentVersion": "1.0.0.0"
+              },
+              "parameters": {
+                "vmName": {
+                  "value": "smbcadfs01"
+                },
+                "vnetid": {
+                  "value": "[reference('VirtualNetwork').outputs.VNetID.value]"
+                },
+                "subnetname": {
+                  "value": "[parameters('subnet1name')]"
+                },
+                "vmsize": {
+                  "value": "[parameters('vmsize')]"
+                },
+                "adminUsername": {
+                  "reference": {
+                    "keyVault": {
+                      "id": "[parameters('keyVaultID')]"
+                    },
+                    "secretname": "adminusername"
+                  }
+      
+                },
+                "adminPassword": {
+                  "reference": {
+                    "keyVault": {
+                      "id": "[parameters('keyVaultID')]"
+                    },
+                    "secretname": "adminpassword"
+                  }
+      
+                },
+                "location": {
+                  "value": "[parameters('location')]"
+                },
+                "imageSku": {
+                  "value": "[parameters('imageSku')]"
+                }
+              }
+            }
+        },
+        {
+            "name": "SMBCCA",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2017-05-10",
+            "dependsOn": [
+              "Microsoft.Resources/deployments/VirtualNetwork"
+            ],
+            "properties": {
+              "mode": "Incremental",
+              "templateLink": {
+                "uri": "[variables('Configuration').vmlburl]",
+                "contentVersion": "1.0.0.0"
+              },
+              "parameters": {
+                "vmName": {
+                  "value": "smbcca01"
+                },
+                "vnetid": {
+                  "value": "[reference('VirtualNetwork').outputs.VNetID.value]"
+                },
+                "subnetname": {
+                  "value": "[parameters('subnet1name')]"
+                },
+                "vmsize": {
+                  "value": "[parameters('vmsize')]"
+                },
+                "adminUsername": {
+                  "reference": {
+                    "keyVault": {
+                      "id": "[parameters('keyVaultID')]"
+                    },
+                    "secretname": "adminusername"
+                  }
+      
+                },
+                "adminPassword": {
+                  "reference": {
+                    "keyVault": {
+                      "id": "[parameters('keyVaultID')]"
+                    },
+                    "secretname": "adminpassword"
+                  }
+      
+                },
+                "location": {
+                  "value": "[parameters('location')]"
+                },
+                "imageSku": {
+                  "value": "[parameters('imageSku')]"
+                }
+              }
+            }
+        },
+        {
+            "name": "SMBCDC",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2017-05-10",
+            "dependsOn": [
+              "Microsoft.Resources/deployments/VirtualNetwork"
+            ],
+            "properties": {
+              "mode": "Incremental",
+              "templateLink": {
+                "uri": "[variables('Configuration').vmlburl]",
+                "contentVersion": "1.0.0.0"
+              },
+              "parameters": {
+                "vmName": {
+                  "value": "smbcdc01"
+                },
+                "vnetid": {
+                  "value": "[reference('VirtualNetwork').outputs.VNetID.value]"
+                },
+                "subnetname": {
+                  "value": "[parameters('subnet1name')]"
+                },
+                "vmsize": {
+                  "value": "[parameters('vmsize')]"
+                },
+                "adminUsername": {
+                  "reference": {
+                    "keyVault": {
+                      "id": "[parameters('keyVaultID')]"
+                    },
+                    "secretname": "adminusername"
+                  }
+      
+                },
+                "adminPassword": {
+                  "reference": {
+                    "keyVault": {
+                      "id": "[parameters('keyVaultID')]"
+                    },
+                    "secretname": "adminpassword"
+                  }
+      
+                },
+                "location": {
+                  "value": "[parameters('location')]"
+                },
+                "imageSku": {
+                  "value": "[parameters('imageSku')]"
+                }
+              }
+            }
+        },
         {
             "name": "SMBCWAP",
             "type": "Microsoft.Resources/deployments",
@@ -115,7 +328,7 @@
                 }
               }
             }
-          },
+        },
         {
             "name": "Subnet1NSG",
             "type": "Microsoft.Resources/deployments",
