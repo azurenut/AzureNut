@@ -1,0 +1,119 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "type": "string",
+      "metadata": {
+        "description": "Region where the resources will be deployed"
+      }
+    },
+    "azureVNetAddressPrefix": {
+      "type": "string",
+
+      "metadata": {
+        "description": "CIDR block representing the address space of the Azure VNet"
+      }
+    },
+    "vnetName": {
+      "type": "string"
+    },
+    "subnetName1": {
+      "type": "string",
+
+      "metadata": {
+        "description": "Aribtrary name for the Azure Subnet"
+      }
+    },
+    "subnetPrefix1": {
+      "type": "string",
+
+      "metadata": {
+        "description": "CIDR block for VM subnet, subset of azureVNetAddressPrefix address space"
+      }
+    },
+    "subnetName2": {
+      "type": "string",
+
+      "metadata": {
+        "description": "Aribtrary name for the Azure Subnet"
+      }
+    },
+    "subnetPrefix2": {
+      "type": "string",
+
+      "metadata": {
+        "description": "CIDR block for VM subnet, subset of azureVNetAddressPrefix address space"
+      }
+    },
+    
+    "subnet1nsgID": {
+      "type": "string",
+      "metadata": {
+        "description": "ID of Subnet 1 NSG"
+      }
+    },
+    "subnet2nsgID": {
+      "type": "string",
+      "metadata": {
+        "description": "ID of Subnet 2 NSG"
+      }
+    }
+
+  },
+  "variables": {
+    
+   
+  },
+  "resources": [
+    
+    {
+      "apiVersion": "[providers('Microsoft.Network','virtualNetworks').apiVersions[0]]",
+      "type": "Microsoft.Network/virtualNetworks",
+      "name": "[parameters('vnetName')]",
+      "location": "[parameters('location')]",
+
+      "properties": {
+        "addressSpace": {
+			"addressPrefixes": [
+			"[parameters('azureVNetAddressPrefix')]"
+									]
+
+        },
+
+        "subnets": [
+          {
+            "name": "[parameters('subnetName1')]",
+            "properties": {
+              "addressPrefix": "[parameters('subnetPrefix1')]",
+              "networkSecurityGroup": {
+                "id": "[parameters('subnet1nsgID')]"
+              }
+            }
+            
+          },
+          {
+            "name": "[parameters('subnetName2')]",
+            "properties": {
+              "addressPrefix": "[parameters('subnetPrefix2')]",
+              "networkSecurityGroup": {
+                "id": "[parameters('subnet2nsgID')]"
+
+              }
+            }
+          }
+        ]
+      }
+    }
+    
+  ],
+  "outputs": {
+    "VnetID" : {
+      "type": "string",
+      "value": "[resourceId('Microsoft.Network/VirtualNetworks',parameters('vnetName'))]"
+    }
+  }
+
+}
+
+

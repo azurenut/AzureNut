@@ -1,0 +1,38 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "type": "string"
+    },
+
+    "subnetname": {
+      "type": "string"
+    }
+  },
+  "variables": {
+    "SubnetNSGName": "[concat(parameters('subnetname'),'nsg')]"
+  },
+  "resources": [
+    {
+      "apiVersion": "[providers('Microsoft.Network','networkSecurityGroups').apiVersions[0]]",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "name": "[variables('SubnetNSGName')]",
+      
+      "location": "[parameters('location')]",
+      "properties": {
+        "securityRules": [
+          
+        ]
+      }
+    }
+
+  ],
+  "outputs": {
+    "nsgID": {
+      "type": "string",
+      "value": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('SubnetNSGName'))]"
+    }
+  }
+
+}

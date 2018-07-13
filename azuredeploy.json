@@ -13,14 +13,32 @@
       },
       "wapname": {
         "type": "string"
+      },
+      "VNetAddressPrefix": {
+        "type": "string"
+      },
+      "vnetname": {
+        "type": "string"
+        },
+      "subnet1Name": {
+        "type": "string"
+      },
+      "subnetPrefix1": {
+        "type": "string"
+      },
+      "subnet2Name": {
+        "type": "string"
+      },
+      "subnetPrefix2": {
+        "type": "string"
       }
     },
     "variables": {
       "configuration": {
-        "NSGURL": "[concat(parameters('templatesBaseUrl'),'/nested/NSG.json')]",
+        "nsgurl": "[concat(parameters('templatesBaseUrl'),'/nested/NSG.json')]",
         "vpngatewayURL": "[concat(parameters('templatesBaseUrl'),'/nested/VPNGateway.json')]",
         "vpnconnectionURL": "[concat(parameters('templatesBaseUrl'),'/nested/VPNConnection.json')]",
-        "localgatewayURL": "[concat(parameters('templatesBaseUrl'),'/nested/LocalGateway.json')]",
+        "vneturl": "[concat(parameters('templatesBaseUrl'),'/nested/VirtualNetwork.json')]",
         "lburl": "[concat(parameters('templatesBaseUrl'),'/nested/loadbalancer.json')]",
         "pipurl": "[concat(parameters('templatesBaseUrl'),'/nested/publicip.json')]"
   
@@ -28,6 +46,97 @@
   
     },
     "resources": [
+        {
+            "name": "Subnet1NSG",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2017-05-10",
+            
+            "properties": {
+              "mode": "Incremental",
+              "templateLink": {
+                "uri": "[variables('Configuration').nsgurl]",
+                "contentVersion": "1.0.0.0"
+              },
+              "parameters": {
+                "location": {
+                  "value": "[parameters('location')]"
+                },
+
+                "subnetname": {
+                  "value": "[parameters('subnet1name')]"
+                }
+              }
+            }
+          },
+          {
+            "name": "Subnet2NSG",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2017-05-10",
+            
+            "properties": {
+              "mode": "Incremental",
+              "templateLink": {
+                "uri": "[variables('Configuration').nsgurl]",
+                "contentVersion": "1.0.0.0"
+              },
+              "parameters": {
+                "location": {
+                  "value": "[parameters('location')]"
+                },
+
+                "subnetname": {
+                  "value": "[parameters('subnet2name')]"
+                }
+              }
+            }
+          },
+        {
+            "name": "VirtualNetwork",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2017-05-10",
+            "dependsOn": [
+              "Microsoft.Resources/deployments/Subnet1NSG",
+              "Microsoft.Resources/deployments/Subnet2NSG"
+            ],
+            "properties": {
+              "mode": "Incremental",
+              "templateLink": {
+                "uri": "[variables('Configuration').vneturl]",
+                "contentVersion": "1.0.0.0"
+      
+              },
+              "parameters": {
+                "location": {
+                  "value": "[parameters('location')]"
+                },
+                "azureVNetAddressPrefix": {
+                  "value": "[parameters('VNetAddressPrefix')]"
+                },
+                "vnetname": {
+                    "value": "[parameters('vnetname')]"
+                  },
+                "subnetName1": {
+                  "value": "[parameters('subnet1name')]"
+                },
+                "subnetPrefix1": {
+                  "value": "[parameters('subnetPrefix1')]"
+                },
+                "subnetName2": {
+                  "value": "[parameters('subnet2name')]"
+                },
+                "subnetPrefix2": {
+                  "value": "[parameters('subnetPrefix2')]"
+                },
+
+                "subnet1nsgID": {
+                  "value": "[reference('Subnet1NSG').outputs.nsgID.value]"
+                },
+                "subnet2nsgID": {
+                  "value": "[reference('Subnet2NSG').outputs.nsgID.value]"
+                }
+              }
+            }
+          },
         {
          "name": "WAPLBPIP",
          "type": "Microsoft.Resources/deployments",

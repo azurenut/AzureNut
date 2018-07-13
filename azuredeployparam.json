@@ -10,6 +10,24 @@
       },
       "wapname": {
         "value": "smbcwap01"
+      },
+      "VNetAddressPrefix": {
+        "value": "10.250.0.0/16"
+      },
+      "vnetname": {
+        "value": "smbcvnet"
+        },
+      "subnet1Name": {
+        "value": "Infrastructure"
+      },
+      "subnetPrefix1": {
+        "value": "10.250.0.0/24"
+      },
+      "subnet2Name": {
+        "value": "DMZ"
+      },
+      "subnetPrefix2": {
+        "value": "10.250.254.0/24"
       }
     }
   }
