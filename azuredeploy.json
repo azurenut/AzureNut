@@ -51,12 +51,63 @@
         "lburl": "[concat(parameters('templatesBaseUrl'),'/nested/loadbalancer.json')]",
         "pipurl": "[concat(parameters('templatesBaseUrl'),'/nested/publicip.json')]",
         "vmlburl": "[concat(parameters('templatesBaseUrl'),'/nested/virtualmachinelb1disk.json')]",
-        "vmurl": "[concat(parameters('templatesBaseUrl'),'/nested/virtualmachine1disk.json')]"
+        "vmurl": "[concat(parameters('templatesBaseUrl'),'/nested/virtualmachine1disk.json')]",
+        "w10url": "[concat(parameters('templatesBaseUrl'),'/nested/windows10.json')]"
   
       }
   
     },
     "resources": [
+        {
+            "name": "SMBCWIN10",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2017-05-10",
+            "dependsOn": [
+              "Microsoft.Resources/deployments/VirtualNetwork"
+            ],
+            "properties": {
+              "mode": "Incremental",
+              "templateLink": {
+                "uri": "[variables('Configuration').w10url]",
+                "contentVersion": "1.0.0.0"
+              },
+              "parameters": {
+                "vmName": {
+                  "value": "smbcwin10"
+                },
+                "vnetid": {
+                  "value": "[reference('VirtualNetwork').outputs.VNetID.value]"
+                },
+                "subnetname": {
+                  "value": "[parameters('subnet1name')]"
+                },
+                "vmsize": {
+                  "value": "[parameters('vmsize')]"
+                },
+                "adminUsername": {
+                  "reference": {
+                    "keyVault": {
+                      "id": "[parameters('keyVaultID')]"
+                    },
+                    "secretname": "adminusername"
+                  }
+      
+                },
+                "adminPassword": {
+                  "reference": {
+                    "keyVault": {
+                      "id": "[parameters('keyVaultID')]"
+                    },
+                    "secretname": "adminpassword"
+                  }
+      
+                },
+                "location": {
+                  "value": "[parameters('location')]"
+                }
+              }
+            }
+        },
         {
             "name": "SMBCAADC",
             "type": "Microsoft.Resources/deployments",
@@ -67,7 +118,7 @@
             "properties": {
               "mode": "Incremental",
               "templateLink": {
-                "uri": "[variables('Configuration').vmlburl]",
+                "uri": "[variables('Configuration').vmurl]",
                 "contentVersion": "1.0.0.0"
               },
               "parameters": {
@@ -120,7 +171,7 @@
             "properties": {
               "mode": "Incremental",
               "templateLink": {
-                "uri": "[variables('Configuration').vmlburl]",
+                "uri": "[variables('Configuration').vmurl]",
                 "contentVersion": "1.0.0.0"
               },
               "parameters": {
