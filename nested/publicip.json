@@ -42,7 +42,7 @@
     "outputs": {
         "pipID" :{
             "type": "string",
-            "value": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('lbpipname'))]"
+            "value": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('pipname'))]"
         }
     }
   }
