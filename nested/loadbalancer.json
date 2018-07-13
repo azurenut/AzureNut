@@ -13,7 +13,7 @@
         "type" : "string"            
     },
     "rdpport" : {
-        "type" : "string"            
+        "type" : "int"            
     },
     "lbpipid" : {
        "type" : "string"            

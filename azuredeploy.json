@@ -1,0 +1,92 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "templatesBaseUrl": {
+        "type": "string",
+        "metadata": {
+          "description": "Linked Templates base url"
+        }
+      },
+      "location": {
+        "type": "string"
+      },
+      "wapname": {
+        "type": "string"
+      }
+    },
+    "variables": {
+      "configuration": {
+        "NSGURL": "[concat(parameters('templatesBaseUrl'),'/nested/NSG.json')]",
+        "vpngatewayURL": "[concat(parameters('templatesBaseUrl'),'/nested/VPNGateway.json')]",
+        "vpnconnectionURL": "[concat(parameters('templatesBaseUrl'),'/nested/VPNConnection.json')]",
+        "localgatewayURL": "[concat(parameters('templatesBaseUrl'),'/nested/LocalGateway.json')]",
+        "lburl": "[concat(parameters('templatesBaseUrl'),'/nested/loadbalancer.json')]",
+        "pipurl": "[concat(parameters('templatesBaseUrl'),'/nested/publicip.json')]"
+  
+      }
+  
+    },
+    "resources": [
+        {
+         "name": "WAPLBPIP",
+         "type": "Microsoft.Resources/deployments",
+         "apiVersion": "2017-05-10",
+        
+         "properties": {
+            "mode": "Incremental",
+            "templateLink": {
+              "uri": "[variables('Configuration').pipurl]",
+              "contentVersion": "1.0.0.0"
+            },
+            "parameters" : {
+                "location": {
+                    "value": "[parameters('location')]"
+                  },
+                "pipname": {
+                    "value": "[concat(parameters('wapname'),'-lb-pip')]"
+                  },
+                "piptype": {
+                    "value": "static"
+                  }
+                
+                }
+            }
+        },
+        {
+            "name": "WAPLB",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2017-05-10",
+            "dependsOn": [
+                "Microsoft.Resources/deployments/WAPLBPIP"
+              ],
+            "properties": {
+               "mode": "Incremental",
+               "templateLink": {
+                 "uri": "[variables('Configuration').lburl]",
+                 "contentVersion": "1.0.0.0"
+               },
+               "parameters" : {
+                   "location": {
+                       "value": "[parameters('location')]"
+                     },
+                   "lbname": {
+                       "value": "[concat(parameters('wapname'),'-lb')]"
+                     },
+                   "rdpport": {
+                       "value": 3389
+                     },
+                     "lbpipid": {
+                         "value": "[reference('WAPLBPIP').outputs.pipID.value]"
+                     }
+                   
+                   }
+               }
+           }
+  
+  
+  
+    ],
+    "outputs": {}
+  }
+  
