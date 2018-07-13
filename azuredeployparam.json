@@ -3,13 +3,13 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
       "templatesBaseUrl": {
-        "value": "https://raw.githubusercontent.com/azurenut/Generali/master"
+        "value": "https://raw.githubusercontent.com/azurenut/Azurenut/master"
       },
       "location": {
         "value": "North Europe"
       },
-      "company": {
-        "value": "Generali"
+      "wapname": {
+        "value": "smbcwap01"
       }
     }
   }
