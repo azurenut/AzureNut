@@ -80,6 +80,9 @@
                 "lbid": {
                     "value": "[reference('WAPLB').outputs.lbID.value]"
                   },
+                "lbname": {
+                    "value": "[reference('WAPLB').outputs.lbname.value]"
+                }, 
                 "subnetname": {
                   "value": "[parameters('subnet2name')]"
                 },

@@ -15,6 +15,9 @@
     "lbid": {
       "type": "string"
     },
+    "lbname" : {
+      "type": "string"
+    },
     "subnetname": {
       "type": "string"
     },
@@ -77,7 +80,7 @@
               },
               "loadBalancerBackendAddressPools": [
                 {
-                  "id": "[concat(parameters('lbid'),'/backendAddressPools/bep')]"
+                  "id": "[concat(parameters('lbid'),'/backendAddressPools/',parameters('lbname'),'bep')]"
                 }
               ],
               "loadBalancerInboundNatRules": [

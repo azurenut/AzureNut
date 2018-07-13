@@ -77,6 +77,10 @@
       "lbID" :{
         "type": "string",
         "value": "[resourceId('Microsoft.Network/loadBalancers', parameters('lbname'))]"
+    },
+    "lbname" :{
+      "type": "string",
+      "value": "[parameters('lbname')]"
     }
     }
   }
