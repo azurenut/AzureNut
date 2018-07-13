@@ -9,7 +9,7 @@
           "description": "Location for all resources."
         }
       },
-      "lbpipname": {
+      "pipname": {
         "type": "string",
         "metadata": {
           "description": "Location for all resources."
@@ -32,7 +32,7 @@
         {
             "apiVersion": "2015-06-15",
             "type": "Microsoft.Network/publicIPAddresses",
-            "name": "[parameters('lbpipname')]",
+            "name": "[parameters('pipname')]",
             "location": "[parameters('location')]",
             "properties": {
               "publicIPAllocationMethod": "[parameters('piptype')]"
